@@ -11,6 +11,7 @@ const { response } = require('express');
 sgMail.setApiKey(process.env.MAIL_KEY);
 
 exports.registerController = (req, res) => {
+  console.log(req.body)
   const { name, email, password } = req.body;
   const errors = validationResult(req);
 
@@ -30,8 +31,7 @@ exports.registerController = (req, res) => {
       }
     });
 
-    const token = jwt.sign(
-      {
+    const token = jwt.sign({
         name,
         email,
         password
@@ -42,6 +42,8 @@ exports.registerController = (req, res) => {
       }
     );
 
+    console.log("JWT is", token)
+
     const emailData = {
       from: process.env.EMAIL_FROM,
       to: email,
@@ -50,7 +52,7 @@ exports.registerController = (req, res) => {
                 <h1>Please use the following to activate your account</h1>
                 <p>${process.env.CLIENT_URL}/users/activate/${token}</p>
                 <hr />
-                <p>This email may containe sensetive information</p>
+                <p>This email may contain sensetive information</p>
                 <p>${process.env.CLIENT_URL}</p>
             `
     };
@@ -82,17 +84,21 @@ exports.activationController = (req, res) => {
           errors: 'Expired link. Signup again'
         });
       } else {
-        const { name, email, password } = jwt.decode(token);
+        console.log(jwt.decode(token))
+        const {email, password } = jwt.decode(token);
 
         console.log(email);
+        console.log(
+          email,
+          password)
         const user = new User({
-          name,
           email,
           password
         });
 
         user.save((err, user) => {
           if (err) {
+            console.log('Error is', err);
             console.log('Save error', errorHandler(err));
             return res.status(401).json({
               errors: errorHandler(err)

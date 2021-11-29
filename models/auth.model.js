@@ -10,11 +10,11 @@ const userScheama = new mongoose.Schema(
       unique: true,
       lowercase: true
     },
-    name: {
-      type: String,
-      trim: true,
-      required: true
-    },
+    // name: {
+    //   type: String,
+    //   trim: true,
+    //   required: true
+    // },
     hashed_password: {
       type: String,
       required: true

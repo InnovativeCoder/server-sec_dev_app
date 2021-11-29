@@ -24,7 +24,7 @@ const authRouter = require('./routes/auth.routes')
 const userRouter = require('./routes/user.routes')
 
 //Use Routes
-app.use('/api/', authRouter)
+app.use('/api', authRouter)
 app.use('/api', userRouter)
 
 const PORT = process.env.PORT
